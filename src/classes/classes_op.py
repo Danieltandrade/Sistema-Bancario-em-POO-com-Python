@@ -1,13 +1,27 @@
-#Modelando Sistema Bancário com Programação Orientada a Objetos em Python
-#Curso: Python Development
-#Instituição: DIO.me
-#Instrutor: Guilherme Arthur de Carvalho
+"""
+Módulo de classes para o sistema bancário.
+
+Contém as definições das classes Cliente, Conta, ContaCorrente, Historico, 
+Transacao, Saque e Deposito.
+"""
 
 #Importação de módulos que serão utilizados no projeto
 from abc import ABC, abstractmethod
 from datetime import datetime
 
 class Cliente:
+    """
+    Classe que representa um cliente do banco.
+
+    Atributos:
+        endereco (str): Endereço do cliente.
+        contas (list): Lista de contas associadas ao cliente.
+    
+    Métodos:
+        realizar_transacao(conta, transacao): Realiza uma transação em uma conta.
+        adicionar_conta(conta): Adiciona uma conta à lista de contas do cliente.
+    """
+
     def __init__(self, endereco):
         self.endereco = endereco
         self.contas = []
@@ -20,6 +34,19 @@ class Cliente:
 
 
 class PessoaFisica(Cliente):
+    """
+    Classe que representa uma pessoa física, herda de Cliente.
+
+    Atributos:
+        nome (str): Nome completo da pessoa fisica.
+        data_nascimento (str): Data de nascimento da pessoa fisica.
+        cpf (str): CPF da pessoa fisica.
+        endereco (str): Endereço da pessoa fisica.
+
+    Métodos:
+        Herda os métodos da classe Cliente.
+    """
+
     def __init__(self, nome, data_nascimento, cpf, endereco):
         super().__init__(endereco)
         self.nome = nome
@@ -28,6 +55,22 @@ class PessoaFisica(Cliente):
 
 
 class Conta:
+    """
+    Classe que representa uma conta bancária.
+
+    Atributos:
+        _saldo (float): Saldo da conta.
+        _numero (str): Número da conta.
+        _agencia (str): Agência da conta.
+        _cliente (Cliente): Cliente associado a conta.
+        _historico (Historico): Histórico de transações da conta.
+
+    Métodos:
+        sacar(valor): Realiza um saque na conta.
+        depositar(valor): Realiza um depósito na conta.
+        nova_conta(cls, cliente, numero): Cria uma nova conta.
+    """
+
     def __init__(self, numero, cliente):
         self._saldo = 0
         self._numero = numero
@@ -88,6 +131,18 @@ class Conta:
 
 
 class ContaCorrente(Conta):
+    """
+    Classe que representa uma conta corrente, herda de Conta.
+
+    Atributos:
+        _limite (float): Limite de saques da conta corrente.
+        _limite_saques (int): Limite de saques da conta corrente.
+
+    Métodos:
+        sacar(valor): Realiza um saque na conta corrente.
+        __str__(): Retorna uma representação em string da conta corrente.
+    """
+
     def __init__(self, numero, cliente, limite=500, limite_saques=3):
         super().__init__(numero, cliente)
         self._limite = limite
@@ -121,6 +176,13 @@ class ContaCorrente(Conta):
 
 
 class Historico:
+    """
+    Classe que representa o histórico de transações de uma conta.
+
+    Atributos:
+        _transacoes (list): Lista de transações realizadas na conta.
+    """
+
     def __init__(self):
         self._transacoes = []
 
@@ -139,6 +201,14 @@ class Historico:
 
 
 class Transacao(ABC):
+    """
+    Classe abstrata que representa uma transação bancária.
+
+    Métodos abstratos:
+        valor: Retorna o valor da transação.
+        registrar(conta): Registra a transação em uma conta.
+    """
+
     @property
     @abstractmethod
     def valor(self):
@@ -150,6 +220,17 @@ class Transacao(ABC):
 
 
 class Saque(Transacao):
+    """
+    Classe que representa um saque, herda de Transacao.
+
+    Atributos:
+        _valor (float): Valor do saque.
+
+    Métodos:
+        valor: Retorna o valor do saque.
+        registrar(conta): Registra o saque em uma conta.
+    """
+
     def __init__(self, valor):
         self._valor = valor
 
@@ -165,6 +246,17 @@ class Saque(Transacao):
 
 
 class Deposito(Transacao):
+    """
+    Classe que representa um depósito, herda de Transacao.
+
+    Atributos:
+        _valor (float): Valor do depósito.
+
+    Métodos:
+        valor: Retorna o valor do depósito.
+        registrar(conta): Registra o depósito em uma conta.
+    """
+
     def __init__(self, valor):
         self._valor = valor
 
